@@ -1,16 +1,317 @@
-# React + Vite
+# Transaction Ledger API
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A full-stack transaction ledger application built with **React, Node.js, Express, and MongoDB**.
 
-Currently, two official plugins are available:
+The application allows users to create accounts, perform credit and debit transactions, view transaction history, check balances, and transfer money between accounts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Live Application
 
-## React Compiler
+### Frontend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+https://bankcrudapp.netlify.app/
 
-## Expanding the Oxlint configuration
+### Backend API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+https://banking-crud-app-api.onrender.com/
+
+### API Health Check
+
+https://banking-crud-app-api.onrender.com/api/health
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- CSS
+- Fetch API
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- Express Validator
+- CORS
+
+### Deployment
+
+- Frontend: Netlify
+- Backend: Render
+- Database: MongoDB Atlas
+
+---
+
+## Project Structure
+
+```text
+transaction-ledger/
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   │
+│   ├── .env
+│   ├── package.json
+│   └── README.md
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   └── main.jsx
+│   │
+│   ├── .env
+│   ├── package.json
+│   └── README.md
+│
+└── README.md
+```
+
+---
+
+## Features
+
+### Account Management
+
+- Create a new account
+- Account balance always starts at `0`
+- Server-generated creation timestamp
+- View all accounts
+- View current account balance
+
+### Transactions
+
+- Credit transactions
+- Debit transactions
+- Positive amount validation
+- Insufficient balance validation
+- Optional transaction description
+- Server-generated unique reference ID
+- Server-generated transaction timestamp
+- Immutable transaction records
+
+### Transaction History
+
+- Latest transactions displayed first
+- Filter by transaction type
+- Pagination
+- Total records
+- Total pages
+- Current page and page size
+
+### Money Transfer
+
+- Transfer money between two accounts
+- Source account balance validation
+- Destination account validation
+- Atomic debit and credit operations
+- Both transaction records are created as part of the transfer
+- MongoDB transaction ensures that partial transfers do not occur
+
+---
+
+## Running the Project Locally
+
+### Prerequisites
+
+Make sure you have installed:
+
+- Node.js
+- npm
+- MongoDB Atlas account
+
+---
+
+# Backend Setup
+
+Navigate to the backend:
+
+```bash
+cd backend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file:
+
+```env
+PORT=5001
+MONGO_URI=your_mongodb_connection_string
+CLIENT_URL=http://localhost:5173
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The backend will run on:
+
+```text
+http://localhost:5001
+```
+
+Health check:
+
+```text
+http://localhost:5001/api/health
+```
+
+For complete backend documentation, see:
+
+```text
+backend/README.md
+```
+
+---
+
+# Frontend Setup
+
+Open another terminal and navigate to the frontend:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file:
+
+```env
+VITE_API_URL=http://localhost:5001/api
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The frontend will normally run on:
+
+```text
+http://localhost:5173
+```
+
+For complete frontend documentation, see:
+
+```text
+frontend/README.md
+```
+
+---
+
+## API Overview
+
+### Accounts
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/accounts` | Create account |
+| GET | `/api/accounts` | Get all accounts |
+| GET | `/api/accounts/:accountId/balance` | Get account balance |
+| GET | `/api/accounts/:accountId/transactions` | Get transaction history |
+
+### Transactions
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/transactions` | Create credit/debit transaction |
+| POST | `/api/transactions/transfer` | Transfer money between accounts |
+
+### Health
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/health` | Check API status |
+
+---
+
+## Deployment
+
+### Backend
+
+The backend is deployed on Render:
+
+https://banking-crud-app-api.onrender.com/
+
+Environment variables configured on Render:
+
+```text
+MONGO_URI
+CLIENT_URL
+NODE_ENV
+```
+
+### Frontend
+
+The frontend is deployed on Netlify:
+
+https://bankcrudapp.netlify.app/
+
+The production API URL is configured using:
+
+```env
+VITE_API_URL=https://banking-crud-app-api.onrender.com/api
+```
+
+---
+
+## Important Notes
+
+- Initial account balance cannot be provided by the client.
+- Account balance starts at `0`.
+- Transaction amounts must be greater than `0`.
+- Debit transactions cannot exceed the available balance.
+- Transaction reference IDs are generated by the backend.
+- Transaction records cannot be edited or deleted through the API.
+- Credit/debit transaction creation and balance updates are handled atomically.
+- Transfers use MongoDB transactions so that a partial transfer cannot occur.
+- MongoDB Atlas is used as the database.
+- Environment variables and secrets are not committed to Git.
+
+---
+
+## Error Handling
+
+The API uses consistent error responses for validation and business logic failures.
+
+Examples include:
+
+- Invalid account ID
+- Account not found
+- Invalid transaction type
+- Invalid amount
+- Insufficient balance
+- Invalid transfer accounts
+- Source and destination accounts being the same
+
+---
+
+## License
+
+This project was developed as a full-stack assessment project.
